@@ -1,37 +1,20 @@
 import { Component } from 'react';
-// import s from './ImageGallery.module.css';
+// import { fetchImages } from '../../services/api';
+import './ImageGallery.css';
+import ImageGalleryItem from '../ImageGalleryItem';
 
 class ImageGallery extends Component {
-  // normalizedTitle = t => {
-  //   return t[0].toUpperCase() + t.slice(1);
-  // };
-  // render() {
-  //   const { contacts, onDeleteContact } = this.props;
-  //   return (
-  //     <ul className={s.list}>
-  //       {contacts.length > 0
-  //         ? contacts.map(contact => (
-  //             <li
-  //               className={s.contactItem}
-  //               key={contact.id}
-  //               name={contact.name}
-  //             >
-  //               <span className={s.contactData}>
-  //                 {this.normalizedTitle(contact.name)} : {contact.number}
-  //               </span>
-  //               <button
-  //                 type="button"
-  //                 className="deleteBtn btn btn-outline-dark"
-  //                 onClick={() => onDeleteContact(contact.id)}
-  //               >
-  //                 Удалить
-  //               </button>
-  //             </li>
-  //           ))
-  //         : 'No contacts added yet.'}
-  //     </ul>
-  //   );
-  // }
+  render() {
+    // console.log(this.props.images);
+
+    return (
+      <ul className="ImageGallery">
+        {this.props.images.map(image => (
+          <ImageGalleryItem image={image} key={image.id}></ImageGalleryItem>
+        ))}
+      </ul>
+    );
+  }
 }
 
 export default ImageGallery;
