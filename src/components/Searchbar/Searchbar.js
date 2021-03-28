@@ -9,6 +9,7 @@ class Searchbar extends Component {
 
   handleChange = e => {
     this.setState({ searchQuery: e.currentTarget.value });
+    return this.state.searchQuery;
   };
 
   handleSubmit = e => {

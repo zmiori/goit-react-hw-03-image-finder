@@ -1,18 +1,18 @@
 import { Component, Fragment } from 'react';
 import './App.css';
-// import { v4 as uuidv4 } from 'uuid';
-
-// import { fetchImages } from './services/api';
 
 import Searchbar from './components/Searchbar';
 import ImageGallery from './components/ImageGallery';
 import fetchImages from './services/api';
+import Button from './components/Button';
+import Loader from './components/Loader';
 
 class App extends Component {
   state = {
     searchQuery: '',
     images: [],
     currentPage: 1,
+    isLoading: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -25,24 +25,46 @@ class App extends Component {
     const { currentPage, searchQuery } = this.state;
     const options = { searchQuery, currentPage };
 
-    fetchImages(options).then(images => {
-      this.setState(prevState => ({
-        images: [...images],
-      }));
-    });
+    console.log('Fetching');
+    this.setState({ isLoading: true });
+
+    fetchImages(options)
+      .then(images => {
+        this.setState(prevState => ({
+          images: [...prevState.images, ...images],
+          currentPage: prevState.currentPage + 1,
+        }));
+      })
+      .then(() => {
+        currentPage > 1 &&
+          window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: 'smooth',
+          });
+      })
+      .catch(error => this.setState({ error }))
+      .finally(() => this.setState({ isLoading: false }));
   };
 
   onChangeQuery = searchQuery => {
-    this.setState({
-      searchQuery: searchQuery,
+    this.setState(prevState => {
+      return {
+        searchQuery: searchQuery,
+        currentPage: 1,
+        images: [],
+      };
     });
   };
 
   render() {
+    const shouldRenderLoadMoreButton = this.state.images.length > 0;
+
     return (
       <Fragment>
         <Searchbar onSubmit={this.onChangeQuery} />
         <ImageGallery images={this.state.images} />
+        {this.state.isLoading && <Loader />}
+        {shouldRenderLoadMoreButton && <Button loadMore={this.fetchImages} />}
       </Fragment>
     );
   }
