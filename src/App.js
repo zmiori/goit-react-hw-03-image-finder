@@ -6,6 +6,7 @@ import ImageGallery from './components/ImageGallery';
 import fetchImages from './services/api';
 import Button from './components/Button';
 import Loader from './components/Loader';
+// import Modal from './components/Modal';
 
 class App extends Component {
   state = {
@@ -16,7 +17,9 @@ class App extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.searchQuery !== this.state.searchQuery) {
+    const { searchQuery } = this.state;
+
+    if (prevState.searchQuery !== searchQuery) {
       this.fetchImages();
     }
   }
@@ -57,13 +60,14 @@ class App extends Component {
   };
 
   render() {
+    const { images, isLoading } = this.state;
     const shouldRenderLoadMoreButton = this.state.images.length > 0;
 
     return (
       <Fragment>
         <Searchbar onSubmit={this.onChangeQuery} />
-        <ImageGallery images={this.state.images} />
-        {this.state.isLoading && <Loader />}
+        <ImageGallery images={images} onClick={this.toggleModal} />
+        {isLoading && <Loader />}
         {shouldRenderLoadMoreButton && <Button loadMore={this.fetchImages} />}
       </Fragment>
     );

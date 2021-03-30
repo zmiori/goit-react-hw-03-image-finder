@@ -4,10 +4,11 @@ import ImageGalleryItem from '../ImageGalleryItem';
 
 class ImageGallery extends Component {
   render() {
+    const { images } = this.props;
     return (
       <Fragment>
         <ul className="ImageGallery">
-          {this.props.images.map(image => (
+          {images.map(image => (
             <ImageGalleryItem image={image} key={image.id}></ImageGalleryItem>
           ))}
         </ul>

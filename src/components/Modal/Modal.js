@@ -1,37 +1,38 @@
 import { Component } from 'react';
-// import s from '.Modal.css';
+import { createPortal } from 'react-dom';
+import './Modal.css';
+
+const modalRoot = document.querySelector('#modal-root');
 
 class Modal extends Component {
-  // normalizedTitle = t => {
-  //   return t[0].toUpperCase() + t.slice(1);
-  // };
-  // render() {
-  //   const { contacts, onDeleteContact } = this.props;
-  //   return (
-  //     <ul className={s.list}>
-  //       {contacts.length > 0
-  //         ? contacts.map(contact => (
-  //             <li
-  //               className={s.contactItem}
-  //               key={contact.id}
-  //               name={contact.name}
-  //             >
-  //               <span className={s.contactData}>
-  //                 {this.normalizedTitle(contact.name)} : {contact.number}
-  //               </span>
-  //               <button
-  //                 type="button"
-  //                 className="deleteBtn btn btn-outline-dark"
-  //                 onClick={() => onDeleteContact(contact.id)}
-  //               >
-  //                 Удалить
-  //               </button>
-  //             </li>
-  //           ))
-  //         : 'No contacts added yet.'}
-  //     </ul>
-  //   );
-  // }
+  componentDidMount() {
+    window.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.handleKeyDown);
+  }
+
+  handleKeyDown = e => {
+    if (e.code === 'Escape') {
+      this.props.onClose();
+    }
+  };
+
+  handleBackdropClick = e => {
+    if (e.currentTarget === e.target) {
+      this.props.onClose();
+    }
+  };
+
+  render() {
+    return createPortal(
+      <div className="Overlay" onClick={this.handleBackdropClick}>
+        <div className="Modal">{this.props.children}</div>
+      </div>,
+      modalRoot,
+    );
+  }
 }
 
 export default Modal;
