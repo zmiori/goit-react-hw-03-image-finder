@@ -1,9 +1,29 @@
 const axios = require('axios').default;
 
-axios.defaults.baseURL = 'https://pixabay.com/api';
 const token = '19908670-1dd1b8415290a1f574a86bd8e';
+axios.defaults.baseURL = 'https://pixabay.com/api';
 
-const fetchImages = ({ searchQuery = '', currentPage = 1, pageSize = 12 }) => {
+// axios.default.params = {
+//   key: token,
+//   image_type: 'photo',
+//   orientation: 'horisontal',
+//   per_page: 12,
+// };
+
+// const fetchImages = async ({ searchQuery, currentPage }) => {
+//   try {
+//     const { data } = await axios.get('', {
+//       params: { searchQuery, currentPage },
+//     });
+
+//     return data.hits;
+//   } catch (error) {
+//     console.log('error', { error });
+//     return [];
+//   }
+// };
+
+const fetchImages = ({ searchQuery, currentPage = 1, pageSize = 12 }) => {
   console.log(searchQuery);
 
   return axios
@@ -11,7 +31,11 @@ const fetchImages = ({ searchQuery = '', currentPage = 1, pageSize = 12 }) => {
       `https://pixabay.com/api/?q=${searchQuery}&page=${currentPage}&key=${token}&image_type=photo&orientation=horizontal&per_page=${pageSize}
 `,
     )
-    .then(response => response.data.hits);
+    .then(response => response.data.hits)
+    .catch(function (error) {
+      console.log(error);
+      return [];
+    });
 };
 
 export default fetchImages;
